@@ -1,5 +1,6 @@
-const { validSession } = require('../managers/authorizationManager');
+const { validSession, logout } = require('../managers/authorizationManager');
 const { register, login } = require('../managers/userManager');
+
 
 const router = require('express').Router();
 
@@ -16,11 +17,11 @@ router.get('/profile',async (req,res)=>{
         email = user.email;
         id = user.id;
     }catch(err){
+        logout(res);
         return res.redirect('/login');
     }
 
-    res.status(301).write('Hello');
-    res.end();
+    res.status(301).render('profile',{username,email,id});
 });
 
 router.get('/login',(req,res)=>{
@@ -62,6 +63,11 @@ router.post('/register',async (req,res)=>{
     }catch(err){
         res.redirect('/register');
     }
+});
+
+router.get('/logout',async(req,res)=>{
+    logout(res);
+    res.redirect('/login');
 });
 
 module.exports = router;

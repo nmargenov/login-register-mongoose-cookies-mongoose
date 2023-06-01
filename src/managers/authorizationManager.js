@@ -1,6 +1,5 @@
 const { verify, secret } = require("../utils/jwt");
 
-
 async function validSession(token){
     try{
         const isValid = await verify(token,secret);
@@ -10,4 +9,8 @@ async function validSession(token){
     }
 }
 
-module.exports = {validSession};
+function logout(res){
+    res.clearCookie('userInfo');
+}
+
+module.exports = {validSession,logout};
