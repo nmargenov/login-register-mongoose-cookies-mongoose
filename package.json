@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "name": "login-register-mongoose-cookies-mongoose",
+  "description": "",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nmargenov/login-register-mongoose-cookies-mongoose.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nmargenov/login-register-mongoose-cookies-mongoose/issues"
+  },
+  "homepage": "https://github.com/nmargenov/login-register-mongoose-cookies-mongoose#readme"
+}
