@@ -24,8 +24,15 @@ router.get('/profile',async (req,res)=>{
     res.status(301).render('profile',{username,email,id});
 });
 
-router.get('/login',(req,res)=>{
-    res.status(301).render('login');
+router.get('/login',async (req,res)=>{
+    const token = req.cookies['userInfo'];
+    try{
+        await validSession(token);
+        return res.redirect('/profile');
+    }catch(err){
+        res.status(301).render('login');
+    }
+
 });
 
 router.post('/login',async (req,res)=>{
@@ -44,8 +51,14 @@ router.post('/login',async (req,res)=>{
     }
 });
 
-router.get('/register',(req,res)=>{
+router.get('/register',async(req,res)=>{
+    const token = req.cookies['userInfo'];
+    try{
+        await validSession(token);
+        return res.redirect('/profile');
+    }catch(err){
     res.status(301).render('register');
+    }
 });
 
 router.post('/register',async (req,res)=>{
@@ -66,6 +79,7 @@ router.post('/register',async (req,res)=>{
 });
 
 router.get('/logout',async(req,res)=>{
+    
     logout(res);
     res.redirect('/login');
 });
