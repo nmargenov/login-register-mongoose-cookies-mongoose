@@ -18,7 +18,24 @@ async function register(username, email, password,rePassword){
 
     const user = {username,email,password:hashPassword};
 
-    User.create(user);
+    const newUser = User.create(user);
+    
+    return user
 } 
 
-module.exports = {register};
+async function login(username,password){
+    const user = await User.findOne({username});
+    if(!username){
+        return new Error('This username doesn\'t exist!');
+    }
+    
+    const isValid = await bcrypt.compare(password,user.password);
+
+    if(!isValid){
+        return new Error('Username or password don\'t match!');
+    }
+
+    return user;
+}
+
+module.exports = {register,login};

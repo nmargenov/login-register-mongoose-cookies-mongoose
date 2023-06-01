@@ -1,4 +1,4 @@
-const { register } = require('../managers/userManager');
+const { register, login } = require('../managers/userManager');
 
 const router = require('express').Router();
 
@@ -8,6 +8,21 @@ router.get('/',(req,res)=>{
 
 router.get('/login',(req,res)=>{
     res.status(301).render('login');
+});
+
+router.post('/login',async (req,res)=>{
+    const username = req.body.username.trim();
+    const password = req.body.password.trim();
+
+    try{
+        const user = await login(username,password)
+        if(user instanceof Error){
+            throw user;
+        }
+        res.redirect('/profile');
+    }catch(err){
+        res.redirect('/login');
+    }
 });
 
 router.get('/register',(req,res)=>{
