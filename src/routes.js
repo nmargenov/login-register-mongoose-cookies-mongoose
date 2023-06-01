@@ -1,8 +1,11 @@
 const router = require('express').Router();
 
 router.get('/',(req,res)=>{
-    res.write("Server is working properly");
-    res.end();
+    res.status(301).render('index');
+});
+
+router.get('*',(req,res)=>{
+    res.status(404).render('404');
 });
 
 
