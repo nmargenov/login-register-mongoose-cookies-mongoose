@@ -11,6 +11,7 @@ async function validSession(token){
 
 function logout(res){
     res.clearCookie('userInfo');
+    res.redirect('/');
 }
 
 module.exports = {validSession,logout};

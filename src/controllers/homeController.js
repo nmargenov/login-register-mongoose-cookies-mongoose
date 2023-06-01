@@ -1,38 +1,22 @@
 const { validSession, logout } = require('../managers/authorizationManager');
 const { register, login } = require('../managers/userManager');
+const { assureUserIsLogged, assureUserIsNotLogged } = require('../middlewares/middlewares');
 
 
 const router = require('express').Router();
+
 
 router.get('/',(req,res)=>{
     res.status(301).render('index');
 });
 
-router.get('/profile',async (req,res)=>{
-    const token = req.cookies['userInfo'];
-    let username,email,id;
-    try{
-        const user = await validSession(token);
-        username = user.username;
-        email = user.email;
-        id = user.id;
-    }catch(err){
-        logout(res);
-        return res.redirect('/login');
-    }
-
+router.get('/profile',assureUserIsLogged, (req,res)=>{
+    const {username,email,id} = req.user;
     res.status(301).render('profile',{username,email,id});
 });
 
-router.get('/login',async (req,res)=>{
-    const token = req.cookies['userInfo'];
-    try{
-        await validSession(token);
-        return res.redirect('/profile');
-    }catch(err){
-        res.status(301).render('login');
-    }
-
+router.get('/login',assureUserIsNotLogged, (req,res)=>{
+    res.status(301).render('login');
 });
 
 router.post('/login',async (req,res)=>{
@@ -51,14 +35,8 @@ router.post('/login',async (req,res)=>{
     }
 });
 
-router.get('/register',async(req,res)=>{
-    const token = req.cookies['userInfo'];
-    try{
-        await validSession(token);
-        return res.redirect('/profile');
-    }catch(err){
+router.get('/register',assureUserIsNotLogged, (req,res)=>{
     res.status(301).render('register');
-    }
 });
 
 router.post('/register',async (req,res)=>{
@@ -78,10 +56,8 @@ router.post('/register',async (req,res)=>{
     }
 });
 
-router.get('/logout',async(req,res)=>{
-    
+router.get('/logout',assureUserIsLogged,(req,res)=>{
     logout(res);
-    res.redirect('/login');
 });
 
 module.exports = router;
