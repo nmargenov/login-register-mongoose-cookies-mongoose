@@ -1,9 +1,26 @@
+const { validSession } = require('../managers/authorizationManager');
 const { register, login } = require('../managers/userManager');
 
 const router = require('express').Router();
 
 router.get('/',(req,res)=>{
     res.status(301).render('index');
+});
+
+router.get('/profile',async (req,res)=>{
+    const token = req.cookies['userInfo'];
+    let username,email,id;
+    try{
+        const user = await validSession(token);
+        username = user.username;
+        email = user.email;
+        id = user.id;
+    }catch(err){
+        return res.redirect('/login');
+    }
+
+    res.status(301).write('Hello');
+    res.end();
 });
 
 router.get('/login',(req,res)=>{

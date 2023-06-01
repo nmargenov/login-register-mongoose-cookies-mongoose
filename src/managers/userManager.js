@@ -1,8 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require('bcrypt');
-const { sign } = require("../utils/jwt");
-
-const secret = "thisIsTheSecretForThisProject123";
+const { sign, secret } = require("../utils/jwt");
 
 async function register(username, email, password,rePassword){
     if(await User.findOne({username})){
