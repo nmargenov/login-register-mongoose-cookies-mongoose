@@ -1,5 +1,8 @@
 const User = require("../models/User");
 const bcrypt = require('bcrypt');
+const { sign } = require("../utils/jwt");
+
+const secret = "thisIsTheSecretForThisProject123";
 
 async function register(username, email, password,rePassword){
     if(await User.findOne({username})){
@@ -20,22 +23,31 @@ async function register(username, email, password,rePassword){
 
     const newUser = User.create(user);
     
-    return user
+    return newUser;
 } 
 
 async function login(username,password){
     const user = await User.findOne({username});
-    if(!username){
+
+    if(!user){
         return new Error('This username doesn\'t exist!');
     }
     
-    const isValid = await bcrypt.compare(password,user.password);
+    const isValid = await bcrypt.compare(password,user?.password);
 
     if(!isValid){
         return new Error('Username or password don\'t match!');
     }
 
-    return user;
+    const payload = {
+        id:user._id,
+        username:user.username,
+        email:user.email
+    }
+
+    const token = await sign(payload,secret,{expiresIn:'2d'});
+
+    return token;
 }
 
 module.exports = {register,login};

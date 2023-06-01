@@ -19,6 +19,7 @@ router.post('/login',async (req,res)=>{
         if(user instanceof Error){
             throw user;
         }
+        res.cookie('userInfo',user);
         res.redirect('/profile');
     }catch(err){
         res.redirect('/login');
